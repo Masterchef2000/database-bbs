@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>石楠社区-用户注册</title>
+		<link rel="stylesheet" href="res/layui/css/layui.css">
+		<link rel="stylesheet" href="res/css/global.css">
+		<script src="res/layui/layui.js"></script>
+		
+	</head>
+
+	<body>
+	<script src="/res/layui/layui.js"></script>
+	<script>
+		//Demo
+		layui.use('form', function(){
+		  var form = layui.form;
+		  form.render();
+		  
+		  //监听提交
+		  form.on('submit(formDemo)', function(data){
+			layer.msg(JSON.stringify(data.field));
+			return false;
+		  });
+		});
+	</script>
+	
+
+		
+		<iframe src="head.html" scrolling="no" width="100%" height="65px"></iframe>	
+		<div class="main layui-clear">
+		<div class="layui-container fly-marginTop">
+			<div class="fly-panel fly-panel-user" pad20="">
+				<div class="layui-tab layui-tab-brief" lay-filter="user">
+					<ul class="layui-tab-title">
+						<li>
+							<a href="login.html">登入</a>
+						</li>
+						<li class="layui-this">注册</li>
+					</ul>
+					
+
+					
+					
+					<div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+						<div class="layui-tab-item layui-show">
+							<div class="layui-form layui-form-pane">
+								<form method="post" action='register.php'>
+									<div class="layui-form-item"> <label  class="layui-form-label">用户名</label>
+										<div class="layui-input-inline"> <input type="text" id="userName" name="title" placeholder="请输入用户名" required="" lay-verify="userName"  class="layui-input"> </div>
+										<div class="layui-form-mid layui-word-aux">将会成为您唯一的登入名</div>
+									</div>
+									
+									<div class="layui-form-item"> <label  class="layui-form-label">密码</label>
+										<div class="layui-input-inline"> <input type="password" id="L_pass" placeholder="请输入密码" name="password" required="" lay-verify="required" autocomplete="off" class="layui-input"> </div>
+										<div class="layui-form-mid layui-word-aux">6到16个字符</div>
+									</div>
+									<!--
+									<div class="layui-form-item"> <label for="L_repass" class="layui-form-label">确认密码</label>
+										<div class="layui-input-inline"> <input type="password" id="L_repass" name="repass" required="" placeholder="请输入确认密码" lay-verify="required" autocomplete="off" class="layui-input"> </div>
+									</div>
+									-->
+									
+								  <div class="layui-form-item">
+									<label class="layui-form-label">性别</label>
+									<div class="layui-input-block">
+									  <input type="radio" name="sex" value="男" title="男">
+									  <input type="radio" name="sex" value="女" title="女" checked>
+									</div>
+								  </div>
+									<div class="layui-form-item"> <label class="layui-form-label" >昵称</label>
+										<div class="layui-input-inline"> <input type="text" id="L_username" placeholder="请输入昵称" name="nickname" required="" lay-verify="required" autocomplete="off" class="layui-input"> </div>
+									</div>
+									<div class="layui-form-item"> <label class="layui-form-label" >年龄</label>
+										<div class="layui-input-inline"> <input type="text" id="name" placeholder="请输入年龄" name="age"  lay-verify="" autocomplete="off" class="layui-input"> </div>
+									</div>			
+									<div class="layui-form-item"> <label  class="layui-form-label" >专业</label>
+										<div class="layui-input-inline"> <input type="text" id="name" placeholder="请输入职业" name="major"  lay-verify="" autocomplete="off" class="layui-input"> </div>
+									</div>									
+									<div class="layui-form-item"> <label  class="layui-form-label" >爱好</label>
+										<div class="layui-input-inline"> <input type="text" id="name" placeholder="请输入爱好" name="hobby"  lay-verify="" autocomplete="off" class="layui-input"> </div>
+									</div>
+									<div class="layui-form-item"> <label  class="layui-form-label" >个性签名</label>
+										<div class="layui-input-inline"> <input type="text" id="name" placeholder="请输入个性签名" name="signature"  lay-verify="" autocomplete="off" class="layui-input"> </div>
+									</div>
+
+
+									
+									<div class="layui-form-item"> 
+										 <div class="layui-input-block">
+											<button name = "submit" class="layui-btn" lay-filter="formDemo" lay-submit="lay-submit">立即注册</button> 
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+		<script src="./res/layui/layui.js"></script>
+		<script type="text/javascript">
+			layui.use(['form'], function () {
+				var form   = layui.form;
+				form.render();
+			})
+		
+		/*
+			layui.use(['form','jquery','layer'], function () {
+				var form   = layui.form;
+				var $      = layui.jquery;
+				var layer  = layui.layer;
+				//添加表单失焦事件
+				//验证表单
+				$('#user').blur(function() {
+					var user = $(this).val();
+		 
+					//alert(user);
+					$.ajax({
+						url:'checkUser.php',
+						type:'post',
+						dataType:'text',
+						data:{user:user},
+						//验证用户名是否可用
+						success:function(data){
+							if (data == 1) {
+								$('#ri').removeAttr('hidden');
+								$('#wr').attr('hidden','hidden');
+		 
+		 
+							} else {
+								$('#wr').removeAttr('hidden');
+								$('#ri').attr('hidden','hidden');
+								layer.msg('当前用户名已被占用! ')
+		 
+							}
+		 
+						}
+					})
+		 
+				});
+		 
+				// you code ...
+				// 为密码添加正则验证
+				$('#pwd').blur(function() {
+						var reg = /^[\w]{6,12}$/;
+						if(!($('#pwd').val().match(reg))){
+							//layer.msg('请输入合法密码');
+							$('#pwr').removeAttr('hidden');
+							$('#pri').attr('hidden','hidden');
+							layer.msg('请输入合法密码');
+						}else {
+							$('#pri').removeAttr('hidden');
+							$('#pwr').attr('hidden','hidden');
+						}
+				});
+		 
+				//验证两次密码是否一致
+				$('#rpwd').blur(function() {
+						if($('#pwd').val() != $('#rpwd').val()){
+							$('#rpwr').removeAttr('hidden');
+							$('#rpri').attr('hidden','hidden');
+							layer.msg('两次输入密码不一致!');
+						}else {
+							$('#rpri').removeAttr('hidden');
+							$('#rpwr').attr('hidden','hidden');
+						};
+				});
+		 
+				//
+				//添加表单监听事件,提交注册信息
+				form.on('submit(sub)', function() {
+					$.ajax({
+						url:'reg.php',
+						type:'post',
+						dataType:'text',
+						data:{
+							user:$('#user').val(),
+							pwd:$('#pwd').val(),
+						},
+						success:function(data){
+							if (data == 1) {
+								layer.msg('注册成功');
+								///location.href = "login.html";
+							}else {
+								layer.msg('注册失败');
+							}
+						}
+					})
+					//防止页面跳转
+					return false;
+				});
+		 
+			});*/
+			/*
+			layui.use(['form', 'layedit', 'laydate'], function(){
+			  var form = layui.form
+			  ,layer = layui.layer
+			  ,layedit = layui.layedit
+			  ,laydate = layui.laydate;
+
+			  form.on('submit(demo1)', function(data){
+			    layer.alert(JSON.stringify(data.field), {
+			      title: '最终的提交信息'
+			    })
+			    return false;
+			  });
+			 */
+
+	
+		</script>
+		
+	</body>
+</html>

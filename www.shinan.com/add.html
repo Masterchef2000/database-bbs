@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>石楠社区-发帖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="res/layui/css/layui.css">
+  <link rel="stylesheet" href="res/css/global.css">
+<script src="res/layui/layui.js"></script>
+</head>
+<body onload="getId()">
+
+<iframe  src="head.html" scrolling="no" width="100%" height="65px" ></iframe>
+
+
+
+<div class="main layui-clear">
+  <div class="fly-panel" pad20>
+    <h2 class="page-title">发表问题</h2>
+    
+    <!-- <div class="fly-none">并无权限</div> -->
+
+    <div class="layui-form layui-form-pane">
+      <form action="add.php" method="post">
+        <div class="layui-form-item">
+          <label for="L_title" class="layui-form-label">标题</label>
+          <div class="layui-input-block">
+            <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+		
+		<div class="layui-form-item">
+		<div layui-inline>
+			<label class="layui-form-label">帖子分类</label>
+			<div class="layui-input-inline">
+			  <select name="kind" lay-filter="aihao">
+				
+				<option value="学习"  selected="">学习</option>
+				<option value="兴趣">兴趣</option>
+				<option value="交易">交易</option>
+			  </select>
+			</div>
+
+		</div>
+		</div>
+		
+		<!--这部分用于获得cookie随表单Post-->
+		<div class="layui-form-item">  
+			<input type="hidden" id="txt_id" name="userid"/>
+		</div>
+		
+		
+        <div class="layui-form-item layui-form-text">
+          <div class="layui-input-block">
+             <div class="editor">
+    			<textarea id="content" name="content" style="width:1040px;height:300px;visibility:hidden;"></textarea>
+  			 </div>
+          </div>
+        </div>
+
+        <div class="layui-form-item">
+          <button name="submit" class="layui-btn" lay-filter="*" lay-submit>立即发布</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" charset="utf-8" src="res/js/kindeditor.js"></script>
+<script src="./res/layui/layui.js"></script>
+<script type="text/javascript">
+    KE.show({
+        id : 'content',
+		resizeMode : 1,
+        cssPath : './index.css',
+        items : [
+        'fontname', 'fontsize', 'textcolor', 'bgcolor', 'bold', 'italic', 'underline',
+        'removeformat', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+        'insertunorderedlist', 'emoticons', 'image', 'link']
+    });
+	layui.use('form', function () {
+				var form = layui.form; 
+				form.render();
+			});      
+		
+
+</script>
+<script>
+		var username;
+		
+
+		 
+		// 获取指定名称的cookie
+		function getCookie(name){
+			var strcookie = document.cookie;//获取cookie字符串
+			var arrcookie = strcookie.split("; ");//分割
+			//遍历匹配
+			for ( var i = 0; i < arrcookie.length; i++) {
+				var arr = arrcookie[i].split("=");
+				if (arr[0] == name){
+					return arr[1];
+				}
+			}
+			return "";
+		}
+
+		// 打印所有cookie
+		function print() {
+			var strcookie = document.cookie;//获取cookie字符串
+			var arrcookie = strcookie.split(";");//分割
+
+			//遍历匹配
+			for ( var i = 0; i < arrcookie.length; i++) {
+				var arr = arrcookie[i].split("=");
+				console.log(arr[0] +"：" + arr[1]);
+			}
+		}
+  
+		
+		function getId(){
+			tmp = getCookie('uid');
+			console.log(tmp)
+			document.getElementById("txt_id").value = tmp;
+		}//获取发帖者id随着帖子一起post
+
+
+</script>
+
+
+  
+
+</body>
+</html>

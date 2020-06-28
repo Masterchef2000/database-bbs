@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>石楠社区-用户信息</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="res/layui/css/layui.css">
+		<script src="res/layui/layui.js"></script>
+		<script src="res/layui/lay/modules/laytpl.js"></script>
+
+
+	</head>
+	<body>
+		<iframe  src="head.html" scrolling="no" width="100%" height="65px" ></iframe>
+		<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		  <legend>用户信息</legend>
+		</fieldset>   
+		<div id="view"></div>
+ 
+ <script id="demo" type="text/html">
+	 {{#  layui.each(d, function(index, item){ }}
+		<div style="padding: 20px; background-color: #F2F2F2;">
+		  <div class="layui-row layui-col-space15">
+			<div class="layui-col-md6">
+			  <div class="layui-card">
+				<div class="layui-card-header">账号信息</div>
+				<div class="layui-card-body">
+					用户名：{{item.nickname}}<br><br>
+					
+					用户ID：{{item.user_id}}
+				</div>
+			  </div>
+			</div>
+			<div class="layui-col-md6">
+			  <div class="layui-card">
+				<div class="layui-card-header">信息</div>
+				<div class="layui-card-body">
+				  性别：{{item.sex}}<br>
+				  年龄：{{item.age}}<br>
+				  专业：{{item.major}}<br>
+				  
+				</div>
+			  </div>
+			</div>
+			<div class="layui-col-md12">
+			  <div class="layui-card">
+				<div class="layui-card-header">个性签名</div>
+				<div class="layui-card-body">
+				  {{item.signature}}
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div> 
+	 {{#  }); }}
+<script src="res/layui/layui.js"></script>		
+<script type="text/javascript">
+	layui.use(['laytpl', 'form', 'jquery'], function() {
+		var user_id = UrlParm.parm("user_id");
+		console.log(user_id);
+		var laytpl = layui.laytpl,
+			form = layui.form,
+			$ = layui.jquery;
+	
+		$.ajax({
+			type: 'POST',
+			url: "user.php",
+			data: {user_id},
+			dataType: "json",
+			success: function(res) {
+				var getTpl = demo.innerHTML,
+					view = document.getElementById('view');
+				laytpl(getTpl).render(res, function(html) {
+					view.innerHTML = html;
+
+				});
+				form.render();
+			},
+			/*error: function() {
+				layer.msg("错误")
+			}*/
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+				debugger
+				// 状态码
+				console.log(XMLHttpRequest.status);
+				// 状态
+				console.log(XMLHttpRequest.readyState);
+				// 错误信息
+				console.log(textStatus);
+				__hideLoading();
+				
+				if(XMLHttpRequest.readyState==0){
+					// 对应登录超时问题，直接跳到登录页面
+					location.href='../login.action';
+				}else{
+					$.messager.alert('提示','系统内部错误，请联系管理员处理！','info');
+				}
+	 
+			}													
+		});
+		
+		
+	})	
+	
+//接受url传来的参数
+	UrlParm = function() { // url参数
+	var data, index;
+	(function init() {
+		data = [];
+		index = {};
+		var u = window.location.search.substr(1);
+		if (u != '') {
+			var parms = decodeURIComponent(u).split('&');
+			for (var i = 0, len = parms.length; i < len; i++) {
+				if (parms[i] != '') {
+					var p = parms[i].split("=");
+					if (p.length == 1 || (p.length == 2 && p[1] == '')) {// p | p=
+						data.push(['']);
+						index[p[0]] = data.length - 1;
+					} else if (typeof(p[0]) == 'undefined' || p[0] == '') { // =c | =
+						data[0] = [p[1]];
+					} else if (typeof(index[p[0]]) == 'undefined') { // c=aaa
+						data.push([p[1]]);
+						index[p[0]] = data.length - 1;
+					} else {// c=aaa
+						data[index[p[0]]].push(p[1]);
+					}
+				}
+			}
+		}
+	})();
+	return {
+		// 获得参数,类似request.getParameter()
+		parm : function(o) { // o: 参数名或者参数次序
+			try {
+				return (typeof(o) == 'number' ? data[o][0] : data[index[o]][0]);
+			} catch (e) {
+			}
+		},
+		//获得参数组, 类似request.getParameterValues()
+		parmValues : function(o) { //  o: 参数名或者参数次序
+			try {
+				return (typeof(o) == 'number' ? data[o] : data[index[o]]);
+			} catch (e) {}
+		},
+		//是否含有parmName参数
+		hasParm : function(parmName) {
+			return typeof(parmName) == 'string' ? typeof(index[parmName]) != 'undefined' : false;
+		},
+		// 获得参数Map ,类似request.getParameterMap()
+		parmMap : function() {
+			var map = {};
+			try {
+				for (var p in index) {  map[p] = data[index[p]];  }
+			} catch (e) {}
+			
+			return map;
+			
+		}
+	}
+}();	
+
+</script>
+</body>

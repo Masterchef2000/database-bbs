@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>石楠社区-帖子详情</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="keywords" content="fly,layui,前端社区">
+<meta name="description"
+	content="">
+<link rel="stylesheet" href="res/layui/css/layui.css">
+<link rel="stylesheet" href="res/css/global.css">
+<script src="res/js/jquery-3.4.1.js"></script>
+<script src="res/layui/layui.js"></script>
+
+<style type="text/css" rel="stylesheet">
+form {
+	margin: 0;
+}
+
+.editor {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+</style>
+
+</head>
+<body onload="showcontent();getId();getPostid()">
+	<iframe  src="head.html" scrolling="no" width="100%" height="65px" ></iframe>
+	<div class="main layui-clear">
+		<div class="wrap">
+			<div class="content detail">
+			
+
+				<!--帖子主体-->			
+				<div id="view1"></div>
+			
+				<div class="fly-panel detail-box" style="padding-top: 0;">
+					<!--回复内容-->
+					<div id="view2" ></div>
+			
+						<!--以下为发表回复区-->
+					<span style="font-style:italic" id="">回复楼主：</span>	
+					
+							<button id="settop" class="layui-btn" style="margin-left: 600px;">点击置顶</button> 
+							
+							<button id="notop" class="layui-btn layui-btn-warm">取消置顶</button> 
+							
+							<button id="delete" class="layui-btn layui-btn-danger" >删除该贴</button> 
+
+							
+
+					
+						
+						
+					<div class="layui-form layui-form-pane">
+						<form action="addreply.php" method="post" autocomplete="off">
+							<div class="layui-form-item layui-form-text">
+								<div class="layui-form-item layui-form-text">
+								  <div class="layui-input-block">
+									 <div class="editor">
+										<textarea id="content" name="content" style="width:1040px;height:250px;visibility:hidden;autocomplete="off""></textarea>
+									 </div>
+								  </div>
+								</div>
+								
+										<!--这部分用于随表单隐藏传输uid和postid-->
+								<div class="layui-form-item">
+									<div class="layui-form-item">  
+										<input type="hidden" id="getuid" name="userid"/>
+									</div>
+								</div>	
+								<div class="layui-form-item">
+									<div class="layui-form-item">  
+										<input type="hidden" id="getpostid" name="post_id"/>
+									</div>
+								</div>									
+								
+								
+
+								<div class="layui-form-item">
+								  <button name="submit" class="layui-btn" lay-filter="*" lay-submit>立即发布</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+				<!--这部分为加载到页面中的模板-->
+				<script id="demo1" type="text/html">
+				 <!-- <h3>{{ d.title }}</h3> -->
+					<div class="fly-panel detail-box">
+				  {{#  layui.each(d, function(index, item){ }}
+						<h1>{{item.title}}</h1>
+						
+						<div class="fly-tip fly-detail-hint" id="pstatus" style="display:none" value="{{item.pstatus}}">
+							<span class="fly-tip-stick">置顶帖</span>
+							  
+						</div>
+						
+						<div class="detail-about">
+							<a class="jie-user" href="user.html?user_id={{item.hostid}}"> <img
+								src="res/images/uer.jpg" alt="头像"> <cite> {{item.nickname}}
+									<em>{{item.ptime}}发布</em> </cite> </a>
+		
+						</div>
+						<div class="detail-body photos" style="margin-bottom: 20px;">
+							<p>{{item.content}}</p>
+						</div>	
+				  {{#  }); }}
+					</div>
+				</script>
+				<script id="demo2" type="text/html">
+				{{#  layui.each(d, function(index, item){ }}
+					<ul class="jieda photos" id="jieda">
+						<li data-id="12" class="jieda-daan"><a
+							name="item-121212121212"></a>
+							<div class="detail-about detail-about-reply">
+								<a class="jie-user" href="user.html?user_id={{item.user_id}}"> <img
+									src="res/images/uer.jpg" alt=""> <cite> <i>{{item.nickname}}</i>
+										<!-- <em>(楼主)</em>
+                  <em style="color:#5FB878">(管理员)</em> --> </cite> </a>
+								<div class="detail-hits">
+									<span>{{item.rtime}}</span>
+								</div>								
+							</div>
+							<div class="detail-body jieda-body">
+								<p>{{item.rcontent}}</p>
+							</div>
+							<div class="jieda-reply">
+							
+							
+					<!--			<button class="jieda-zan zanok" type="submit"  name = "hard" onclick="javascript:window.location.href='detail_thumb.php'><i 
+									class="iconfont icon-zan"></i>
+									<em>{{item.thumb}}</em>
+								</button> 
+					-->			
+								
+								<button class="jieda-zan zanok" type="submit" name = "hard" onclick="javascript:window.location.href='detail_thumb.php'"><i
+									class="iconfont icon-zan"></i>
+									<em>{{item.thumb}}</em>
+								</button> 
+							
+
+							</div>
+						</li>
+						<!-- <li class="fly-none">没有任何回答</li> -->
+					</ul>
+					<hr/>
+				{{#  }); }}
+				</script>
+				
+ <script type="text/javascript" charset="utf-8" src="res/js/kindeditor.js"></script>
+ <script src="res/layui/lay/modules/jquery.js"></script>
+ 
+ <script type="text/javascript">
+		
+	
+	function getCookie(name){
+		var strcookie = document.cookie;//获取cookie字符串
+		var arrcookie = strcookie.split("; ");//分割
+		//遍历匹配
+		for ( var i = 0; i < arrcookie.length; i++) {
+			var arr = arrcookie[i].split("=");
+			if (arr[0] == name){
+				return arr[1];
+			}
+		}
+		return "";
+	};
+	
+	var userid = getCookie('uid');
+	
+	
+
+	//获取帖子id
+	function showcontent(){
+		var post_id = UrlParm.parm("post_id");
+		　//页面跳转之后就可以获取数据
+		layui.use(['jquery','laytpl','form'], function() {
+			var $ = layui.jquery,
+					form = layui.form,
+					laytpl = layui.laytpl;
+			form.render();		
+			//获取帖子详情
+			$.ajax({
+				type: 'POST',
+				url: 'detail.php',
+				data: {post_id},
+				dataType: "json",
+				success: function(res) {
+					
+					var getTpl = demo1.innerHTML,
+						view1 = document.getElementById('view1');
+						
+						laytpl(getTpl).render(res, function(html) {
+						view1.innerHTML = html;
+						});
+					form.render();
+					if($("#pstatus").attr("value") != '0'){	
+						
+						$("#pstatus").css("display","inline");
+					}
+					else{
+						
+					}
+				},
+				/*error: function() {
+					layer.msg("错误")
+				}*/
+				error:function(XMLHttpRequest, textStatus, errorThrown){
+					debugger
+					// 状态码
+					console.log(XMLHttpRequest.status);
+					// 状态
+					console.log(XMLHttpRequest.readyState);
+					// 错误信息
+					console.log(textStatus);
+					__hideLoading();
+					
+					if(XMLHttpRequest.readyState==0){
+						// 对应登录超时问题，直接跳到登录页面
+						location.href='../login.action';
+					}else{
+						$.messager.alert('提示','系统内部错误，请联系管理员处理！','info');
+					}
+				}
+			});
+				//获取回复
+			$.ajax({
+				type: 'POST',
+				url: 'detail_reply.php',
+				data: {post_id},
+				dataType: "json",
+				success: function(res) {					
+					var getTp2 = demo2.innerHTML,
+						view2 = document.getElementById('view2');
+						laytpl(getTp2).render(res, function(html) {
+						view2.innerHTML = html;
+						});
+					form.render();
+				},
+				/*error: function() {
+					layer.msg("错误")
+				}*/
+				error:function(XMLHttpRequest, textStatus, errorThrown){
+					debugger
+					// 状态码
+					console.log(XMLHttpRequest.status);
+					// 状态
+					console.log(XMLHttpRequest.readyState);
+					// 错误信息
+					console.log(textStatus);
+					__hideLoading();					
+					if(XMLHttpRequest.readyState==0){
+						// 对应登录超时问题，直接跳到登录页面
+						location.href='../login.action';
+					}else{
+						$.messager.alert('提示','系统内部错误，请联系管理员处理！','info');
+					}
+				}
+			});
+
+			
+		});
+
+		
+		
+	};
+	
+	function getId(){
+		tmp = getCookie('uid');
+		document.getElementById("getuid").value = tmp;
+	}
+	function getPostid(){
+		tmp = UrlParm.parm("post_id")
+		document.getElementById("getpostid").value = tmp;
+	}
+	
+	 
+		$("#settop").click(function(){		
+			console.log("click");
+			$.post("detail_settop.php",
+				{post_id},					
+				function(){
+					alert("置顶成功");
+				});
+			alert("置顶成功");
+			history.go(0) 
+		});
+		
+		$("#notop").click(function(){		
+			console.log("click");
+			$.post("detail_notop.php",
+				{post_id},					
+				function(){
+					alert("取消置顶成功");
+				});
+			alert("取消置顶成功");
+			history.go(0) 
+			
+		});
+		
+		$("#delete").click(function(){		
+			console.log("click");
+			$.post("detail_delete.php",
+				{post_id},					
+				function(){
+					alert("删除该帖成功");
+				});
+			alert("删除该帖成功");
+			window.location.href='index.html';
+			
+		});
+
+	
+
+
+	
+	function zan(){
+		layui.use(['jquery'], function() {
+			var $ = layui.jquery;
+			$("#btn").on("click",function(){
+				$.get("detail_thumb.php",{name:$("#btn").val()},
+				function(data){
+				$("#result").text(data);
+				});
+			});
+		})
+	}
+	
+
+//显示输入框	
+    KE.show({
+        id : 'content',
+		resizeMode : 1,
+        items : [
+        'fontname', 'fontsize', 'textcolor', 'bgcolor', 'bold', 'italic', 'underline',
+        'removeformat', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+        'insertunorderedlist', 'emoticons', 'image', 'link']
+    });//输入框
+	
+//接受url传来的参数
+	UrlParm = function() { // url参数
+	var data, index;
+	(function init() {
+		data = [];
+		index = {};
+		var u = window.location.search.substr(1);
+		if (u != '') {
+			var parms = decodeURIComponent(u).split('&');
+			for (var i = 0, len = parms.length; i < len; i++) {
+				if (parms[i] != '') {
+					var p = parms[i].split("=");
+					if (p.length == 1 || (p.length == 2 && p[1] == '')) {// p | p=
+						data.push(['']);
+						index[p[0]] = data.length - 1;
+					} else if (typeof(p[0]) == 'undefined' || p[0] == '') { // =c | =
+						data[0] = [p[1]];
+					} else if (typeof(index[p[0]]) == 'undefined') { // c=aaa
+						data.push([p[1]]);
+						index[p[0]] = data.length - 1;
+					} else {// c=aaa
+						data[index[p[0]]].push(p[1]);
+					}
+				}
+			}
+		}
+	})();
+	return {
+		// 获得参数,类似request.getParameter()
+		parm : function(o) { // o: 参数名或者参数次序
+			try {
+				return (typeof(o) == 'number' ? data[o][0] : data[index[o]][0]);
+			} catch (e) {
+			}
+		},
+		//获得参数组, 类似request.getParameterValues()
+		parmValues : function(o) { //  o: 参数名或者参数次序
+			try {
+				return (typeof(o) == 'number' ? data[o] : data[index[o]]);
+			} catch (e) {}
+		},
+		//是否含有parmName参数
+		hasParm : function(parmName) {
+			return typeof(parmName) == 'string' ? typeof(index[parmName]) != 'undefined' : false;
+		},
+		// 获得参数Map ,类似request.getParameterMap()
+		parmMap : function() {
+			var map = {};
+			try {
+				for (var p in index) {  map[p] = data[index[p]];  }
+			} catch (e) {}
+			
+			return map;
+			
+		}
+	}
+}();
+		
+	var post_id = UrlParm.parm("post_id");	
+
+		
+		
+
+  </script>
+</body>
+</html>
